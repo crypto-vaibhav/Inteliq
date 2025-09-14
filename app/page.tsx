@@ -15,6 +15,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import ContactFormPopup  from "@/components/ContactFormPopup";
 import { WaitlistFormPopup } from "@/components/WaitlistFormPopup"; // Import the new component
 import { CodeModal } from "@/components/CodeModal";
+import { ModelInfoButton } from "@/components/ModelInfoDisplay";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletStore } from "@/lib/wallet-store";
 import { motion, AnimatePresence } from "framer-motion";
@@ -457,8 +458,9 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center"
+            className="flex items-center gap-3"
           >
+            <ModelInfoButton />
             <WalletButton />
           </motion.div>
         </div>
