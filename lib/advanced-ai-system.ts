@@ -72,6 +72,12 @@ export class AdvancedAISystem {
     try {
       const startTime = options.startTime || Date.now();
       
+      // Check if this is a model information query
+      const modelInfoResponse = this.handleModelInfoQuery(message);
+      if (modelInfoResponse) {
+        return modelInfoResponse;
+      }
+      
       // First check if this message is small talk
       const smallTalkResponse = handleSmallTalk(message);
       if (smallTalkResponse) {
@@ -290,6 +296,86 @@ export class AdvancedAISystem {
     return this.contextManager.getUserProfile();
   }
   
+  /**
+   * Handle model information queries
+   */
+  private handleModelInfoQuery(message: string): AISystemResponse | null {
+    const normalizedMessage = message.toLowerCase().trim();
+    
+    // Check if the user is asking about the AI model
+    const modelKeywords = [
+      'is this pro model',
+      'is this a pro model',
+      'what model are you',
+      'which model',
+      'what ai model',
+      'are you gpt',
+      'what version',
+      'model info',
+      'model information',
+      'ai model',
+      'what ai are you',
+      'are you chatgpt',
+      'which gpt',
+      'pro version',
+      'premium model'
+    ];
+    
+    const isModelQuery = modelKeywords.some(keyword => 
+      normalizedMessage.includes(keyword)
+    );
+    
+    if (!isModelQuery) return null;
+    
+    const response = formatWithPersonality(
+      `Yes, this is a professional model! I'm powered by GPT-4 Turbo Preview, which is OpenAI's most advanced and capable model. Here's what makes me a "pro" setup:
+
+🚀 **Advanced Capabilities:**
+• 128K token context window (way more memory than standard models)
+• Function calling for direct token swaps and wallet interactions
+• Real-time market data integration
+• Advanced reasoning and multi-step planning
+• Natural language command processing
+
+💎 **Professional Features:**
+• Premium-tier API access with faster response times
+• Enhanced accuracy for crypto and Web3 queries
+• Integrated wallet transaction capabilities
+• Market intelligence and analysis tools
+• Context-aware conversation handling
+
+This isn't just a basic chatbot - I'm specifically configured for serious crypto trading and DeFi interactions. Want me to show you what I can do with your wallet?`,
+      { 
+        mood: 'assertive', 
+        includeWittyRemark: true,
+        includeOpening: false 
+      }
+    );
+    
+    return {
+      message: response,
+      suggestions: [
+        "Show me a demo swap",
+        "Check my wallet balance", 
+        "What tokens can you analyze?",
+        "Tell me about market trends"
+      ],
+      data: {
+        modelInfo: {
+          name: "GPT-4 Turbo Preview",
+          tier: "Professional",
+          isPro: true,
+          capabilities: [
+            "Function calling",
+            "128K context window",
+            "Market data integration",
+            "Wallet interactions"
+          ]
+        }
+      }
+    };
+  }
+
   /**
    * Get the session ID
    */
